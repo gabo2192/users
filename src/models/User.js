@@ -45,7 +45,6 @@ const UserSchema = new Schema({
   phone: String,
   linkedin: String,
   company: {
-    companyId: String,
     comanyName: String,
     comapanySlogan: String,
     companyEmail: String,
