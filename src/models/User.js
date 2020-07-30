@@ -43,7 +43,7 @@ const UserSchema = new Schema({
     number: Number,
   },
   phone: String,
-  likedin: String,
+  linkedin: String,
   company: {
     companyId: String,
     comanyName: String,
