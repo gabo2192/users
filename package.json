@@ -1,0 +1,24 @@
+{
+  "name": "users",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.16.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.25",
+    "passport": "^0.4.1",
+    "passport-facebook-token": "^4.0.0",
+    "passport-google-token": "^0.1.2"
+  }
+}
