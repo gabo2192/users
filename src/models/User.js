@@ -54,6 +54,10 @@ const UserSchema = new Schema({
       country: String,
       zipCode: String,
     },
+    companyId: {
+      type: String,
+      number: Number,
+    },
     companyRating: String,
   },
   moneyBalance: {
