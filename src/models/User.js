@@ -44,6 +44,30 @@ const UserSchema = new Schema({
   },
   phone: String,
   likedin: String,
+  company: {
+    companyId: String,
+    comanyName: String,
+    comapanySlogan: String,
+    companyEmail: String,
+    companyAddress: {
+      address: String,
+      city: String,
+      country: String,
+      zipCode: String,
+    },
+    companyRating: String,
+  },
+  moneyBalance: {
+    moneyType: String,
+    moneyAmount: Number,
+    moneyAvailable: Number,
+    withdraws: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Withdraws',
+      },
+    ],
+  },
   workExperiences: [
     {
       companyName: String,
@@ -72,7 +96,13 @@ const UserSchema = new Schema({
       ref: 'Project',
     },
   ],
-  projects: [
+  projectsWorked: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+    },
+  ],
+  projectsOwned: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Project',
