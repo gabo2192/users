@@ -44,6 +44,7 @@ const UserSchema = new Schema({
   },
   phone: String,
   linkedin: String,
+  rating: String,
   company: {
     comanyName: String,
     comapanySlogan: String,
@@ -58,7 +59,7 @@ const UserSchema = new Schema({
       type: String,
       number: Number,
     },
-    companyRating: String,
+    companyRating: Number,
   },
   moneyBalance: {
     moneyType: String,
