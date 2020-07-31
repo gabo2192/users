@@ -111,6 +111,13 @@ const typeDefs = gql`
     authGoogle(accessToken: String!): AuthData
     updateMe(userInput: UserInput): Boolean
     requestReset(email: String!): Boolean
+    resetPassword(
+      resetToken: String!
+      password: String!
+      confirmPassword: String!
+    ): AuthData
+    requestMailConfirmation: Boolean
+    mailConfirmation(resetToken: String!): Boolean
   }
 `;
 

@@ -17,7 +17,7 @@ const makeANiceEmail = (text) => `
         line-height: 2;
         font-size: 20px;
     ">
-        <h2>Hola, usa este link para restaurar tu contraseña!</h2>
+        <h2>Hola</h2>
         <p>${text}</p>
         <p>No respondas este correo</p>
         <p>Equipo de Tykuns</p>

@@ -28,7 +28,7 @@ const startServer = async () => {
 
   await mongoose.connect(
     'mongodb+srv://admin:fuckko21@tykuns.i1zfs.mongodb.net/Users',
-    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
   );
 
   app.listen({ port: 4000 }, () => {

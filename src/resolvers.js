@@ -172,11 +172,11 @@ const resolvers = {
         throw new Error('No se pudo actualizar la db');
       }
       const mailRes = await transport.sendMail({
-        from: 'gabriel.rojas@dbravos.com',
+        from: 'noreply@tykuns.com',
         to: user.email,
-        subject: 'Your Password Reset Token',
+        subject: 'Cambia tu contraseña',
         html: makeANiceEmail(
-          `¡Puedes cambiar tu contraseñan con un click! 
+          `¡Puedes cambiar tu contraseña con un click! 
           \n\n 
           <a href="${process.env.FRONTEND_URL}reset?resetToken=${resetToken}">
             Click aquí para resetear
@@ -184,8 +184,94 @@ const resolvers = {
           `
         ),
       });
-      console.log(process.env.FRONTEND_URL);
-      console.log(mailRes);
+      if (!mailRes) {
+        throw new Error('El email no pudo ser enviado');
+      }
+      return true;
+    },
+    resetPassword: async (_, { resetToken, password, confirmPassword }) => {
+      if (password !== confirmPassword) {
+        throw new Error('Tus contraseñas no coinciden');
+      }
+      const user = await User.findOne({
+        resetToken: resetToken,
+        resetTokenExpiry: { $gte: Date.now() - 3600000 },
+      });
+
+      if (!user) {
+        throw new Error('Este token es invalido o ya expiró');
+      }
+      const newPassword = await bcrypt.hash(password, 12);
+
+      const updateUser = await User.findOneAndUpdate(
+        { _id: user._id },
+        { password: newPassword, resetToken: null, resetTokenExpiry: null }
+      );
+
+      if (!updateUser) {
+        throw new Error('No se pudo conectar con la base de datos');
+      }
+
+      const token = await updateUser.generateJWT(updateUser);
+
+      return {
+        userId: updateUser._id,
+        token: token,
+        tokenExpiration: 30,
+      };
+    },
+    requestMailConfirmation: async (_, args, { user }) => {
+      if (!user) {
+        throw new Error('Necesitas iniciar sesión');
+      }
+      const currentUser = await User.findOne({ email: user.email });
+      const resetToken = currentUser.generateJWT(user);
+      const resetTokenExpiry = Date.now() + 3600000;
+      const result = await User.findOneAndUpdate(
+        { _id: currentUser._id },
+        { resetToken: resetToken, resetTokenExpiry: resetTokenExpiry }
+      );
+      if (!result) {
+        throw new Error('No se pudo actualizar la db');
+      }
+      const mailRes = await transport.sendMail({
+        from: 'noreply@tykuns.com',
+        to: user.email,
+        subject: 'Confirma tu correo',
+        html: makeANiceEmail(
+          `¡Estás a un paso de confirmar tu correo! 
+          \n\n 
+          <a href="${process.env.FRONTEND_URL}confirmMail?confirmMailToken=${resetToken}">
+            Click aquí para confirmar
+          </a>
+          `
+        ),
+      });
+      if (!mailRes) {
+        throw new Error('El email no pudo ser enviado');
+      }
+      return true;
+    },
+    mailConfirmation: async (_, { resetToken }, { user }) => {
+      if (!user) {
+        throw new Error('Necesitas loguear');
+      }
+      const currentUser = await User.findOneAndUpdate(
+        {
+          _id: user.userId,
+          resetToken: resetToken,
+          resetTokenExpiry: { $gte: Date.now() - 3600000 },
+        },
+        {
+          mailConfirmation: true,
+          resetToken: null,
+          resetTokenExpiry: null,
+        }
+      );
+      if (!currentUser) {
+        throw new Error('No se pudo conectar con la base de datos');
+      }
+      return true;
     },
   },
 };

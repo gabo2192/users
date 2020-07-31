@@ -34,6 +34,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  mailConfirmation: {
+    type: Boolean,
+    default: false,
+  },
   address: {
     address: String,
     city: String,
