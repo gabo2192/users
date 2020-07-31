@@ -55,8 +55,13 @@ const resolvers = {
           });
           return user.save();
         })
-        .then((result) => {
-          return { ...result._doc, password: null, _id: result.id };
+        .then(async (result) => {
+          const newUser = await User.findOne({ _id: result.id });
+          return {
+            userId: result.id,
+            token: newUser.generateJWT(newUser),
+            tokenExpiration: 30,
+          };
         })
         .catch((err) => {
           throw err;
@@ -129,7 +134,7 @@ const resolvers = {
         return error;
       }
     },
-    updateMe: async (_, args, { req, res, user }) => {
+    updateMe: async (_, args, { user }) => {
       if (!user) {
         throw new Error('Necesitas iniciar sesión');
       }
@@ -141,7 +146,6 @@ const resolvers = {
           { _id: user.userId },
           newArgs.userInput
         );
-
         if (!result) {
           return false;
         }

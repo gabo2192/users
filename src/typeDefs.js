@@ -106,7 +106,7 @@ const typeDefs = gql`
       password: String
       firstName: String!
       lastName: String!
-    ): User
+    ): AuthData
     authFacebook(accessToken: String!): AuthData
     authGoogle(accessToken: String!): AuthData
     updateMe(userInput: UserInput): Boolean
