@@ -110,6 +110,7 @@ const typeDefs = gql`
     authFacebook(accessToken: String!): AuthData
     authGoogle(accessToken: String!): AuthData
     updateMe(userInput: UserInput): Boolean
+    requestReset(email: String!): Boolean
   }
 `;
 

@@ -9,6 +9,8 @@ const UserSchema = new Schema({
     requred: true,
   },
   password: String,
+  resetToken: String,
+  resetTokenExpiry: Date,
   social: {
     facebookProvider: {
       id: String,

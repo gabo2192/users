@@ -17,6 +17,7 @@
     "graphql": "^15.3.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
+    "nodemailer": "^6.4.11",
     "passport": "^0.4.1",
     "passport-facebook-token": "^4.0.0",
     "passport-google-token": "^0.1.2"

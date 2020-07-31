@@ -1,6 +1,8 @@
-const User = require('./models/User');
 const bcrypt = require('bcryptjs');
+
+const User = require('./models/User');
 const { authenticateFacebook, authenticateGoogle } = require('./passport');
+const { transport, makeANiceEmail } = require('./mail');
 
 const resolvers = {
   Query: {
@@ -153,6 +155,37 @@ const resolvers = {
       } catch (err) {
         throw new Error('error');
       }
+    },
+    requestReset: async (_, { email }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error('El email no está registrado');
+      }
+      const resetToken = user.generateJWT(user);
+      const resetTokenExpiry = Date.now() + 3600000;
+
+      const result = await User.findOneAndUpdate(
+        { _id: user._id },
+        { resetToken: resetToken, resetTokenExpiry: resetTokenExpiry }
+      );
+      if (!result) {
+        throw new Error('No se pudo actualizar la db');
+      }
+      const mailRes = await transport.sendMail({
+        from: 'gabriel.rojas@dbravos.com',
+        to: user.email,
+        subject: 'Your Password Reset Token',
+        html: makeANiceEmail(
+          `¡Puedes cambiar tu contraseñan con un click! 
+          \n\n 
+          <a href="${process.env.FRONTEND_URL}reset?resetToken=${resetToken}">
+            Click aquí para resetear
+          </a>
+          `
+        ),
+      });
+      console.log(process.env.FRONTEND_URL);
+      console.log(mailRes);
     },
   },
 };
