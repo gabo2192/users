@@ -21,12 +21,28 @@ const typeDefs = gql`
     zipCode: String
   }
 
+  input AddressInput {
+    address: String
+    city: String
+    country: String
+    zipCode: String
+  }
+
   type PersonId {
     type: PersonIdType
     number: Int
   }
-  type CompanyId {
+  input PersonIdInput {
     type: PersonIdType
+    number: Int
+  }
+
+  type CompanyId {
+    type: CompanyIdType
+    number: Int
+  }
+  input CompanyIdInput {
+    type: CompanyIdType
     number: Int
   }
 
@@ -38,15 +54,23 @@ const typeDefs = gql`
     companyId: CompanyId
     companyRating: Float
   }
+  input CompanyInput {
+    companyName: String
+    companySlogan: String
+    companyEmail: String
+    companyAddress: AddressInput
+    companyId: CompanyIdInput
+    companyRating: Float
+  }
 
   type User {
     _id: ID!
     email: String!
     firstName: String!
     lastName: String!
-    role: String
     identification: PersonId
     address: Address
+    role: String
     phone: String
     linkedin: String
     company: Company
@@ -57,12 +81,11 @@ const typeDefs = gql`
     email: String
     firstName: String
     lastName: String
-    role: String
-    identification: PersonId
-    address: Address
+    identification: PersonIdInput
+    address: AddressInput
     phone: String
     linkedin: String
-    company: Company
+    company: CompanyInput
     rating: Int
   }
 
@@ -86,6 +109,7 @@ const typeDefs = gql`
     ): User
     authFacebook(accessToken: String!): AuthData
     authGoogle(accessToken: String!): AuthData
+    updateMe(userInput: UserInput): Boolean
   }
 `;
 
