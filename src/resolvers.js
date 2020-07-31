@@ -129,6 +129,27 @@ const resolvers = {
         return error;
       }
     },
+    updateMe: async (_, args, { req, res, user }) => {
+      if (!user) {
+        throw new Error('Necesitas iniciar sesión');
+      }
+
+      const newArgs = JSON.parse(JSON.stringify(args));
+
+      try {
+        const result = await User.findOneAndUpdate(
+          { _id: user.userId },
+          newArgs.userInput
+        );
+
+        if (!result) {
+          return false;
+        }
+        return true;
+      } catch (err) {
+        throw new Error('error');
+      }
+    },
   },
 };
 
